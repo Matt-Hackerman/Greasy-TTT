@@ -2,6 +2,7 @@ var p1Score = 0;
 var p2Score = 0;
 var tie = 0;
 var turn = 1;
+var moves = 0;
 
 function checkWinX(){
     if($(".row-1 .box.X").length === 3
@@ -16,8 +17,7 @@ function checkWinX(){
     || $("#3").hasClass("X")
     && $("#5").hasClass("X")
     && $("#7").hasClass("X")){
-        alert("Hey You Greasy Bastard You WON!!!");
-        $("#p1Score").text(p1Score = p1Score + 1);
+        return true
     }
 }
 
@@ -36,32 +36,66 @@ function checkWinO(){
     || $("#3").hasClass("O")
     && $("#5").hasClass("O")
     && $("#7").hasClass("O")){
-        alert("Hey You Greasy Bastard You WON!!!");
-        $("#p2Score").text(p2Score = p2Score + 1);
+        return true
     }
 }
 
 
+function boardReset(){
+    $(".X").empty();
+    $(".O").empty();
+    $(".X").removeClass("X");
+    $(".O").removeClass("O");
+    turn = 1
+    $("#turn").text("P1");
+}
 
 
 $(".box").click(function(){
     if($(this).hasClass("X") || $(this).hasClass("O")){
-        alert("Hey You Greasy Bastard NO Cheating");
+        alert("Bubbles: \"Hey You Greasy Bastard NO Cheating\"");
     }
     else if(turn === 1){
         $(this).text("X");
         turn = 2;
-        $("#turn").text(2);
+        $("#turn").text("P2");
         $(this).addClass("X");
-        checkWinX();
-        checkWinO();
+        moves = moves + 1
+        if(checkWinX()){
+        p1Score++
+        moves = 0
+        $("#p1Score").text(p1Score);
+        alert("Bubbles: \"Julian you Greasy Bastard You WON!!!\"");
+        boardReset();
+        }
+        else if(moves === 9){
+            $("#tie").text(tie = tie + 1);
+            boardReset();
+        }
     }
     else{
         $(this).text("O");
         turn = 1
-        $("#turn").text(1);
+        $("#turn").text("P1");
         $(this).addClass("O");
-        checkWinX();
-        checkWinO();
+        moves = moves + 1
+        if(checkWinO()){
+        p2Score++
+        moves = 0
+        $("#p2Score").text(p2Score);
+        alert("Bubbles: \"Rickey you Greasy Bastard You Cheated!!!\"");
+        boardReset();
+        }
+        else if(moves === 9){
+            $("#tie").text(tie = tie + 1);
+            boardReset();
+        }
     }
+});
+
+
+$(".resetbtn").click(function(){
+    $("#p1Score").text(0);
+    $("#p2Score").text(0);
+    $("#tie").text(0);
 });
